@@ -11,10 +11,19 @@ body {
 
 .app {
   width: 320px;
-  margin: 5px auto;
+  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
   text-align: center;
   background-color: #ddd;
   border-radius: 5px;
+}
+
+.app-body-wrapper {
+  position: relative;
 }
 
 .app-header {
@@ -45,14 +54,15 @@ div::-webkit-scrollbar-thumb {
 }
 
 .chat-messages-container {
-  height: 500px;
   font-size: 15px;
   overflow-y: scroll;
 }
 
 .chat-form {
-  width: 100%;
+  width: 320px;
   margin: 0 auto;
+  position: fixed;
+  bottom: 0;
   padding: 5px 0px;
   border-radius: 5px;
   background-color: #999;

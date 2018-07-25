@@ -14,7 +14,7 @@ interface MessageFormProps {
 
 const MessageForm = (props: MessageFormProps) => (
   <form onSubmit={props.handleSubmit(props.onSubmit)}>
-    <div className="chat-form clearfix">
+    <div className="chat-form clearfix" id="messageForm">
       <div className="pull-left width-80">
         <Field name="message" type="text" component="input" className="chat-input" />
       </div>

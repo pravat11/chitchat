@@ -7,7 +7,9 @@ import { initializePusher } from '../services/pusher';
 
 const App = () => (
   <div className="app">
-    <div className="app-header">Chitchat</div>
+    <div className="app-header" id="appHeader">
+      Chitchat
+    </div>
     <MessagesContainer />
     <MessageForm />
   </div>
