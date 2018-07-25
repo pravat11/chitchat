@@ -15,21 +15,16 @@ interface State {
   setHeight: (height: number) => void;
 }
 
-const MessagesContainer = (props: MessagesContainerProps & State) => {
-  //tslint:disable
-  console.log(props.height);
-
-  return (
-    <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: props.height }}>
-      {props.chatHistory.map((chatMessage, index) => (
-        <div className={`message-box ${chatMessage.self ? 'right' : 'left'}`} key={index}>
-          {chatMessage.message}
-          <span className="message-time">{props.getTimeFromTimestamp(chatMessage.timestamp)}</span>
-        </div>
-      ))}
-    </div>
-  );
-};
+const MessagesContainer = (props: MessagesContainerProps & State) => (
+  <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: props.height }}>
+    {props.chatHistory.map((chatMessage, index) => (
+      <div className={`message-box ${chatMessage.self ? 'right' : 'left'}`} key={index}>
+        {chatMessage.message}
+        <span className="message-time">{props.getTimeFromTimestamp(chatMessage.timestamp)}</span>
+      </div>
+    ))}
+  </div>
+);
 
 const mapStateToProps = (state: AppState) => ({
   chatHistory: state.data.chatHistory

@@ -9,8 +9,27 @@ body {
   padding: 0;
 }
 
+@media (min-width: 300px) {
+  .app {
+    width: 100%;
+  }
+
+  .chat-form {
+    width: 100%;
+  }
+}
+
+@media (min-width: 480px) {
+  .app {
+    width: 480px;
+  }
+
+  .chat-form {
+    width: 480px;
+  }
+}
+
 .app {
-  width: 320px;
   margin: 0 auto;
   position: absolute;
   top: 0;
@@ -59,7 +78,6 @@ div::-webkit-scrollbar-thumb {
 }
 
 .chat-form {
-  width: 320px;
   margin: 0 auto;
   position: fixed;
   bottom: 0;
