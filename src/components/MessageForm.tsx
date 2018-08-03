@@ -45,7 +45,11 @@ const enhance = compose<any, any>(
       if (formData.message) {
         const timestamp = new Date().toUTCString();
 
-        await props.sendMessage(formData.message, timestamp);
+        try {
+          props.sendMessage(formData.message, timestamp);
+        } catch (err) {
+          return;
+        }
 
         props.reset('messageForm');
       }

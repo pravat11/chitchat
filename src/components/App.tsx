@@ -10,8 +10,10 @@ const App = () => (
     <div className="app-header" id="appHeader">
       Chitchat
     </div>
-    <MessagesContainer />
-    <MessageForm />
+    <div>
+      <MessagesContainer />
+      <MessageForm />
+    </div>
   </div>
 );
 

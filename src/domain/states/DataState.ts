@@ -6,8 +6,12 @@ export interface ChatMessage {
 
 interface DataState {
   chatHistory: ChatMessage[];
-  isSending: boolean;
-  error: any;
+  isSending: {
+    [key: string]: boolean;
+  };
+  error: {
+    [key: string]: any;
+  };
 }
 
 export default DataState;

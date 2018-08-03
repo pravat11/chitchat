@@ -21,9 +21,9 @@ export const MESSAGE_RECEIVED = 'MESSAGE_RECEIVED';
 export type MESSAGE_RECEIVED = typeof MESSAGE_RECEIVED;
 
 // Types for the actions
-export type SendMessageActionPending = Action<SEND_MESSAGE_PENDING>;
-export type SendMessageActionRejected = ActionWithPayload<SEND_MESSAGE_REJECTED, any>;
-export type SendMessageActionFulfilled = ActionWithPayload<SEND_MESSAGE_FULFILLED, SentMessage>;
+export type SendMessageActionPending = Action<SEND_MESSAGE_PENDING, SentMessage>;
+export type SendMessageActionRejected = ActionWithPayload<SEND_MESSAGE_REJECTED, any, SentMessage>;
+export type SendMessageActionFulfilled = ActionWithPayload<SEND_MESSAGE_FULFILLED, SentMessage, SentMessage>;
 
 export type SendMessageAction = SendMessageActionPending | SendMessageActionFulfilled | SendMessageActionRejected;
 export type MessageReceivedAction = ActionWithPayload<MESSAGE_RECEIVED, SentMessage>;
@@ -32,4 +32,11 @@ export type MessageActions = SendMessageAction | MessageReceivedAction;
 
 // Action creators
 export const messageReceived: any = createAction(MESSAGE_RECEIVED);
-export const sendMessage = createAction(SEND_MESSAGE, messageService.sendMessage);
+export const sendMessage = createAction(
+  SEND_MESSAGE,
+  messageService.sendMessage,
+  (message: string, timestamp: string) => ({
+    message,
+    timestamp
+  })
+);

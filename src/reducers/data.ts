@@ -1,3 +1,5 @@
+import { omit } from 'lodash';
+
 import DataState, { ChatMessage } from '../domain/states/DataState';
 import {
   MessageActions,
@@ -9,7 +11,7 @@ import {
 
 export const INITIAL_STATE: DataState = {
   chatHistory: [],
-  isSending: false,
+  isSending: {},
   error: {}
 };
 
@@ -25,14 +27,25 @@ export default function profile(state: DataState = INITIAL_STATE, action: Messag
     case SEND_MESSAGE_PENDING:
       return {
         ...state,
-        isSending: true
+        isSending: {
+          ...state.isSending,
+          [action.meta.timestamp]: true
+        },
+        chatHistory: state.chatHistory.concat({
+          message: action.meta.message,
+          timestamp: action.meta.timestamp,
+          self: true
+        })
       };
 
     case SEND_MESSAGE_REJECTED:
       return {
         ...state,
-        isSending: false,
-        error: action.payload.response.data
+        isSending: omit(state.isSending, action.meta.timestamp),
+        error: {
+          ...state.error,
+          [action.meta.timestamp]: action.payload.response
+        }
       };
 
     case MESSAGE_RECEIVED:
@@ -44,12 +57,10 @@ export default function profile(state: DataState = INITIAL_STATE, action: Messag
     case SEND_MESSAGE_FULFILLED:
       return {
         ...state,
-        isSending: false,
-        chatHistory: state.chatHistory.concat({
-          message: action.payload.message,
-          timestamp: action.payload.timestamp,
-          self: true
-        })
+        isSending: {
+          ...state.isSending,
+          [action.meta.timestamp]: false
+        }
       };
 
     default:
