@@ -86,6 +86,12 @@
     "@types/react" "*"
     redux "^3.6.0 || ^4.0.0"
 
+"@types/redux-persist@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@types/redux-persist/-/redux-persist-4.3.1.tgz#aa4c876859e0bea5155e5f7980e5b8c4699dc2e6"
+  dependencies:
+    redux-persist "*"
+
 "@types/redux-promise-middleware@^0.0.10":
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/@types/redux-promise-middleware/-/redux-promise-middleware-0.0.10.tgz#64b27c7df8bc581b4fe40c43ec48ed0e08438736"
@@ -5958,6 +5964,10 @@ redux-form@^7.4.2:
     lodash-es "^4.17.10"
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
+
+redux-persist@*, redux-persist@^5.10.0:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/redux-persist/-/redux-persist-5.10.0.tgz#5d8d802c5571e55924efc1c3a9b23575283be62b"
 
 redux-promise-middleware@^5.1.1:
   version "5.1.1"
