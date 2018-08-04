@@ -1,5 +1,12 @@
-interface Session {
+export interface LoginResponse {
+  id: number;
   token: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  userAccountId: number;
 }
 
-export default Session;
+type SessionState = LoginResponse | null;
+
+export default SessionState;

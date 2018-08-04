@@ -1,19 +1,17 @@
+import { LoginActions } from '../actions/login';
+import { LOGIN_FULFILLED } from '../actions/login';
 import SessionState from '../domain/states/Session';
 
-export const INITIAL_STATE: SessionState = {
-  token: ''
-};
+const INITIAL_STATE: SessionState = null;
 
-/**
- * Reducer for session.
- *
- * @param {SessionState} [state=INITIAL_STATE]
- * @param {any} action
- * @returns {SessionState}
- */
-export default function profile(state: SessionState = INITIAL_STATE, action: any): SessionState {
+const session = (state: SessionState = INITIAL_STATE, action: LoginActions): SessionState => {
   switch (action.type) {
+    case LOGIN_FULFILLED:
+      return action.payload;
+
     default:
       return state;
   }
-}
+};
+
+export default session;
