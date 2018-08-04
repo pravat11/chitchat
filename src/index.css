@@ -58,6 +58,32 @@ body {
   font-size: 1.5em;
 }
 
+.login-form-wrapper {
+  width: 80%;
+  margin: 0 auto;
+  padding: 50px 0px;
+}
+
+.login-form-wrapper .login-form-element {
+  border: 1px solid grey;
+}
+
+.login-form-wrapper input {
+  display: block;
+  height: 30px;
+  width: 250px;
+  padding: 5px;
+  margin: 10px auto;
+  border-radius: 5px;
+}
+
+.login-button {
+  border: none;
+  font-weight: bold;
+  color: white;
+  background-color: #0000ff;
+}
+
 div::-webkit-scrollbar {
   width: 10px;
 }
