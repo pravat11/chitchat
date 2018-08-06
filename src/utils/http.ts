@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-import store from '../store';
 import config from '../config';
+import { logout } from '../actions/auth';
+import store, { purgeStore } from '../store';
 
 const http = axios.create({
   baseURL: config.baseURL,
@@ -19,5 +20,20 @@ http.interceptors.request.use(request => {
 
   return request;
 });
+
+http.interceptors.response.use(
+  response => response,
+
+  async error => {
+    if (error.response && error.response.status === 401) {
+      await purgeStore();
+      store.dispatch(logout());
+
+      return;
+    }
+
+    return Promise.reject(error);
+  }
+);
 
 export default http;

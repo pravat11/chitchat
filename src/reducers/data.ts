@@ -39,12 +39,16 @@ export default function profile(state: DataState = INITIAL_STATE, action: AppAct
       };
 
     case SEND_MESSAGE_REJECTED:
+      const errorResponse = action.payload.response;
+
       return {
         ...state,
         isSending: omit(state.isSending, action.meta.timestamp),
         error: {
           ...state.error,
-          [action.meta.timestamp]: action.payload.response
+          [action.meta.timestamp]: (errorResponse && errorResponse.data && errorResponse.data.error) || {
+            message: 'Error'
+          }
         }
       };
 
