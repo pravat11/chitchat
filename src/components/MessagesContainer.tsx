@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
+import { purgeStore } from '../store';
+import { logout } from '../actions/auth';
 import AppState from '../domain/states/AppState';
 import { ChatMessage } from '../domain/states/DataState';
 
@@ -9,6 +11,7 @@ interface MessagesContainerProps {
   isSending: {
     [key: string]: boolean;
   };
+  logout: () => void;
 }
 
 interface State {
@@ -46,6 +49,11 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     return `${hours}:${parsedMinutes}`;
   };
 
+  handleLogout = async () => {
+    await purgeStore();
+    this.props.logout();
+  };
+
   getIndicator(timestamp: string): JSX.Element {
     const isSending = this.props.isSending[timestamp];
 
@@ -65,6 +73,9 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 
     return (
       <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: this.state.height }}>
+        <div className="cross-button" title="Logout" onClick={this.handleLogout}>
+          &times;
+        </div>
         {chatHistory.map((chatMessage, index) => {
           const sendingFailed = isSending[chatMessage.timestamp] === undefined;
 
@@ -88,4 +99,11 @@ const mapStateToProps = (state: AppState) => ({
   chatHistory: state.data.chatHistory
 });
 
-export default connect(mapStateToProps)(MessagesContainer);
+const mapDispatchToProps = {
+  logout
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MessagesContainer);

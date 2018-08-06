@@ -1,8 +1,9 @@
 import { omit } from 'lodash';
 
+import { LOGOUT } from '../actions/auth';
+import AppActions from '../domain/AppActions';
 import DataState, { ChatMessage } from '../domain/states/DataState';
 import {
-  MessageActions,
   MESSAGE_RECEIVED,
   SEND_MESSAGE_PENDING,
   SEND_MESSAGE_REJECTED,
@@ -22,7 +23,7 @@ export const INITIAL_STATE: DataState = {
  * @param {MessageActions} action
  * @returns {DataState}
  */
-export default function profile(state: DataState = INITIAL_STATE, action: MessageActions): DataState {
+export default function profile(state: DataState = INITIAL_STATE, action: AppActions): DataState {
   switch (action.type) {
     case SEND_MESSAGE_PENDING:
       return {
@@ -62,6 +63,9 @@ export default function profile(state: DataState = INITIAL_STATE, action: Messag
           [action.meta.timestamp]: false
         }
       };
+
+    case LOGOUT:
+      return INITIAL_STATE;
 
     default:
       return state;

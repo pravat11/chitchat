@@ -7,6 +7,10 @@ export interface LoginResponse {
   userAccountId: number;
 }
 
-type SessionState = LoginResponse | null;
+interface Session extends LoginResponse {
+  username: string;
+}
+
+type SessionState = Session | null;
 
 export default SessionState;

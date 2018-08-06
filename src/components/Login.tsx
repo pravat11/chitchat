@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { login } from '../actions/login';
+import { login } from '../actions/auth';
 import { Field, reduxForm } from 'redux-form';
 import { compose, withHandlers } from 'recompose';
 
