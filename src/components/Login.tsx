@@ -4,10 +4,12 @@ import { login } from '../actions/auth';
 import { Field, reduxForm } from 'redux-form';
 import { compose, withHandlers } from 'recompose';
 
+import AppState from '../domain/states/AppState';
 import LoginPayload from '../domain/misc/LoginPayload';
 
 interface LoginProps {
   handleSubmit: any;
+  isLoading: boolean;
   login: (payload: LoginPayload) => void;
   onSubmit: (formData: LoginPayload) => void;
 }
@@ -17,10 +19,16 @@ const Login = (props: LoginProps) => (
     <div className="login-form-wrapper">
       <Field className="login-form-element" name="username" component="input" type="text" placeholder="Username" />
       <Field className="login-form-element" name="password" component="input" type="password" placeholder="Password" />
-      <input className="login-button" type="submit" value="Login" />
+      <button className="login-button" type="submit" disabled={props.isLoading}>
+        {props.isLoading ? <div className="spinner" /> : <span>Login</span>}
+      </button>
     </div>
   </form>
 );
+
+const mapStateToProps = (state: AppState) => ({
+  isLoading: state.session.isLoading
+});
 
 const mapDispatchToProps = {
   login
@@ -32,7 +40,7 @@ const enhance = compose<any, any>(
   }),
 
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   ),
 
