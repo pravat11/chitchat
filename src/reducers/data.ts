@@ -2,13 +2,14 @@ import { omit } from 'lodash';
 
 import { LOGOUT } from '../actions/auth';
 import AppActions from '../domain/AppActions';
-import DataState, { ChatMessage } from '../domain/states/DataState';
+import DataState from '../domain/states/DataState';
 import {
   MESSAGE_RECEIVED,
   SEND_MESSAGE_PENDING,
   SEND_MESSAGE_REJECTED,
   SEND_MESSAGE_FULFILLED
 } from '../actions/messages';
+import SentMessage from '../domain/response/SentMessage';
 
 export const INITIAL_STATE: DataState = {
   chatHistory: [],
@@ -26,6 +27,8 @@ export const INITIAL_STATE: DataState = {
 export default function profile(state: DataState = INITIAL_STATE, action: AppActions): DataState {
   switch (action.type) {
     case SEND_MESSAGE_PENDING:
+      //tslint:disable
+      console.log(action.meta);
       return {
         ...state,
         isSending: {
@@ -33,9 +36,7 @@ export default function profile(state: DataState = INITIAL_STATE, action: AppAct
           [action.meta.timestamp]: true
         },
         chatHistory: state.chatHistory.concat({
-          message: action.meta.message,
-          timestamp: action.meta.timestamp,
-          self: true
+          ...action.meta
         })
       };
 
@@ -52,7 +53,7 @@ export default function profile(state: DataState = INITIAL_STATE, action: AppAct
     case MESSAGE_RECEIVED:
       return {
         ...state,
-        chatHistory: updateChatHistory(state.chatHistory, action.payload.message, action.payload.timestamp)
+        chatHistory: updateChatHistory(state.chatHistory, action.payload)
       };
 
     case SEND_MESSAGE_FULFILLED:
@@ -72,14 +73,13 @@ export default function profile(state: DataState = INITIAL_STATE, action: AppAct
   }
 }
 
-function updateChatHistory(chatHistory: ChatMessage[], message: string, timestamp: string): ChatMessage[] {
+function updateChatHistory(chatHistory: SentMessage[], payload: SentMessage): SentMessage[] {
+  const { message, timestamp } = payload;
   const chatMessage = chatHistory.find(chatItem => chatItem.message === message && chatItem.timestamp === timestamp);
 
   return chatMessage
     ? chatHistory
     : chatHistory.concat({
-        message,
-        timestamp,
-        self: false
+        ...payload
       });
 }

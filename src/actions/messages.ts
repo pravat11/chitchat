@@ -2,7 +2,7 @@ import { createAction } from 'redux-actions';
 
 import { Action, ActionWithPayload } from './base';
 import * as messageService from '../services/message';
-import { SentMessage } from '../domain/response/pusherResponse';
+import SentMessage from '../domain/response/SentMessage';
 
 export const SEND_MESSAGE = 'SEND_MESSAGE';
 export type SEND_MESSAGE = typeof SEND_MESSAGE;
@@ -32,11 +32,4 @@ export type MessageActions = SendMessageAction | MessageReceivedAction;
 
 // Action creators
 export const messageReceived: any = createAction(MESSAGE_RECEIVED);
-export const sendMessage = createAction(
-  SEND_MESSAGE,
-  messageService.sendMessage,
-  (message: string, timestamp: string) => ({
-    message,
-    timestamp
-  })
-);
+export const sendMessage = createAction(SEND_MESSAGE, messageService.sendMessage, payload => payload);

@@ -1,13 +1,16 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import * as classnames from 'classnames';
 
 import { purgeStore } from '../store';
 import { logout } from '../actions/auth';
+import { getUsername } from '../services/user';
 import AppState from '../domain/states/AppState';
-import { ChatMessage } from '../domain/states/DataState';
+import SentMessage from '../domain/response/SentMessage';
 
 interface MessagesContainerProps {
-  chatHistory: ChatMessage[];
+  username: string;
+  chatHistory: SentMessage[];
   isSending: {
     [key: string]: boolean;
   };
@@ -69,18 +72,32 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
   }
 
   render() {
-    const { chatHistory, isSending } = this.props;
+    const { chatHistory, isSending, username } = this.props;
 
     return (
       <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: this.state.height }}>
         <div className="cross-button" title="Logout" onClick={this.handleLogout}>
           &times;
         </div>
-        {chatHistory.map((chatMessage, index) => {
+        {chatHistory.map((chatMessage, index, chatMessageArray) => {
           const sendingFailed = isSending[chatMessage.timestamp] === undefined;
+          const previousMessage = index > 0 ? chatMessageArray[index - 1] : null;
+          const shouldShowUsername = previousMessage ? previousMessage.username !== chatMessage.username : true;
+
+          const messageBoxClass = classnames({
+            'message-box': true,
+            mt: shouldShowUsername,
+            right: chatMessage.username === username,
+            left: chatMessage.username !== username
+          });
 
           return (
-            <div className={`message-box ${chatMessage.self ? 'right' : 'left'}`} key={index}>
+            <div className={messageBoxClass} key={index}>
+              {shouldShowUsername && (
+                <div className="username-wrapper">
+                  {chatMessage.username === username ? 'You' : chatMessage.username}
+                </div>
+              )}
               {chatMessage.message}
               <div className="message-time">{this.getTimeFromTimestamp(chatMessage.timestamp)}</div>
               <div className={'indicator ' + (sendingFailed ? 'error-indicator-wrapper' : '')}>
@@ -96,7 +113,8 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 
 const mapStateToProps = (state: AppState) => ({
   isSending: state.data.isSending,
-  chatHistory: state.data.chatHistory
+  chatHistory: state.data.chatHistory,
+  username: getUsername(state.session)
 });
 
 const mapDispatchToProps = {

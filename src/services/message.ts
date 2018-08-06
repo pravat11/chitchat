@@ -1,12 +1,8 @@
 import config from '../config';
 import http from '../utils/http';
-import { SentMessage } from '../domain/response/pusherResponse';
+import SentMessage from '../domain/response/SentMessage';
 
-export async function sendMessage(message: string, timestamp: string): Promise<SentMessage> {
-  const payload = {
-    message,
-    timestamp
-  };
+export async function sendMessage(payload: SentMessage): Promise<SentMessage> {
   await http.post(config.apis.sendMessage, payload);
 
   return payload;

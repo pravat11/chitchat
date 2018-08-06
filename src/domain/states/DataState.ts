@@ -1,11 +1,7 @@
-export interface ChatMessage {
-  message: string;
-  timestamp: string;
-  self: boolean;
-}
+import SentMessage from '../response/SentMessage';
 
 interface DataState {
-  chatHistory: ChatMessage[];
+  chatHistory: SentMessage[];
   isSending: {
     [key: string]: boolean;
   };

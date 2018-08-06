@@ -3,13 +3,17 @@ import { connect } from 'react-redux';
 import { compose, withHandlers } from 'recompose';
 import { Field, reduxForm, reset } from 'redux-form';
 
+import { getUsername } from '../services/user';
+import AppState from '../domain/states/AppState';
 import { sendMessage } from '../actions/messages';
+import SentMessagePayload from '../domain/response/SentMessage';
 
 interface MessageFormProps {
+  username: string;
   handleSubmit: any;
   reset: (formName: string) => void;
   onSubmit: (formData: any) => void;
-  sendMessage: (message: string, timestamp: string) => void;
+  sendMessage: (payload: SentMessagePayload) => void;
 }
 
 const MessageForm = (props: MessageFormProps) => (
@@ -25,6 +29,10 @@ const MessageForm = (props: MessageFormProps) => (
   </form>
 );
 
+const mapStateToProps = (state: AppState) => ({
+  username: getUsername(state.session)
+});
+
 const mapDispatchToProps = {
   reset,
   sendMessage
@@ -32,7 +40,7 @@ const mapDispatchToProps = {
 
 const enhance = compose<any, any>(
   connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
   ),
 
@@ -44,9 +52,14 @@ const enhance = compose<any, any>(
     onSubmit: (props: MessageFormProps) => async (formData: any) => {
       if (formData.message) {
         const timestamp = new Date().toUTCString();
+        const sendMessagePayload = {
+          timestamp,
+          username: props.username,
+          message: formData.message
+        };
 
         try {
-          props.sendMessage(formData.message, timestamp);
+          props.sendMessage(sendMessagePayload);
         } catch (err) {
           return;
         }
