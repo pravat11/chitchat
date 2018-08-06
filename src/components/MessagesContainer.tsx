@@ -83,26 +83,26 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
           const sendingFailed = isSending[chatMessage.timestamp] === undefined;
           const previousMessage = index > 0 ? chatMessageArray[index - 1] : null;
           const shouldShowUsername = previousMessage ? previousMessage.username !== chatMessage.username : true;
+          const isSelf = chatMessage.username === username;
 
           const messageBoxClass = classnames({
             'message-box': true,
             mt: shouldShowUsername,
-            right: chatMessage.username === username,
-            left: chatMessage.username !== username
+            right: isSelf,
+            left: !isSelf
+          });
+
+          const indicatorClass = classnames({
+            indicator: true,
+            'error-indicator-wrapper': sendingFailed
           });
 
           return (
             <div className={messageBoxClass} key={index}>
-              {shouldShowUsername && (
-                <div className="username-wrapper">
-                  {chatMessage.username === username ? 'You' : chatMessage.username}
-                </div>
-              )}
+              {shouldShowUsername && <div className="username-wrapper">{isSelf ? 'You' : chatMessage.username}</div>}
               {chatMessage.message}
               <div className="message-time">{this.getTimeFromTimestamp(chatMessage.timestamp)}</div>
-              <div className={'indicator ' + (sendingFailed ? 'error-indicator-wrapper' : '')}>
-                {this.getIndicator(chatMessage.timestamp)}
-              </div>
+              {isSelf && <div className={indicatorClass}>{this.getIndicator(chatMessage.timestamp)}</div>}
             </div>
           );
         })}
@@ -114,7 +114,7 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 const mapStateToProps = (state: AppState) => ({
   isSending: state.data.isSending,
   chatHistory: state.data.chatHistory,
-  username: getUsername(state.session)
+  username: getUsername(state.session.data)
 });
 
 const mapDispatchToProps = {

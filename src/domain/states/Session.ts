@@ -7,10 +7,14 @@ export interface LoginResponse {
   userAccountId: number;
 }
 
-interface Session extends LoginResponse {
+export interface SessionData extends LoginResponse {
   username: string;
 }
 
-type SessionState = Session | null;
+interface Session {
+  data: SessionData | null;
+  isLoading: boolean;
+  error: any;
+}
 
-export default SessionState;
+export default Session;

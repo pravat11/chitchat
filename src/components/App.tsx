@@ -6,11 +6,11 @@ import Login from './Login';
 import MessageForm from './MessageForm';
 import AppState from '../domain/states/AppState';
 import MessagesContainer from './MessagesContainer';
-import SessionState from '../domain/states/Session';
+import { SessionData } from '../domain/states/Session';
 import { initializePusher } from '../services/pusher';
 
 interface AppProps {
-  session: SessionState;
+  sessionData: SessionData | null;
 }
 
 const App = (props: AppProps) => (
@@ -18,7 +18,7 @@ const App = (props: AppProps) => (
     <div className="app-header" id="appHeader">
       Chitchat
     </div>
-    {props.session && props.session.token ? (
+    {props.sessionData && props.sessionData.token ? (
       <div>
         <MessagesContainer />
         <MessageForm />
@@ -30,7 +30,7 @@ const App = (props: AppProps) => (
 );
 
 const mapStateToProps = (state: AppState) => ({
-  session: state.session
+  sessionData: state.session.data
 });
 
 const enhance = compose<any, any>(

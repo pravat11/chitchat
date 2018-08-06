@@ -11,10 +11,10 @@ const http = axios.create({
 });
 
 http.interceptors.request.use(request => {
-  const session = store.getState().session;
+  const sessionData = store.getState().session.data;
 
-  if (session && session.token) {
-    request.headers['token'] = session.token;
+  if (sessionData && sessionData.token) {
+    request.headers['token'] = sessionData.token;
   }
 
   return request;

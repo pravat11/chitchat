@@ -30,7 +30,7 @@ const MessageForm = (props: MessageFormProps) => (
 );
 
 const mapStateToProps = (state: AppState) => ({
-  username: getUsername(state.session)
+  username: getUsername(state.session.data)
 });
 
 const mapDispatchToProps = {
