@@ -221,6 +221,14 @@ div::-webkit-scrollbar-thumb {
   border-bottom: 3px solid green;
 }
 
+.error-message {
+  color: red;
+  width: 250px;
+  margin: 0 auto;
+  font-size: 14px;
+  text-align: justify;
+}
+
 .error-indicator {
   color: red;
   width: 16px;

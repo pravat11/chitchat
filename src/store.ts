@@ -1,6 +1,5 @@
 import thunk from 'redux-thunk';
-import storage from 'redux-persist/lib/storage';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistStore } from 'redux-persist';
 import reduxPromiseMiddleware from 'redux-promise-middleware';
 import { createStore, compose, applyMiddleware } from 'redux';
 
@@ -12,16 +11,7 @@ if (window['__REDUX_DEVTOOLS_EXTENSION__']) {
   enhancers.push(window['__REDUX_DEVTOOLS_EXTENSION__']());
 }
 
-const config = {
-  storage,
-  key: 'session',
-  blacklist: ['form', 'data'],
-  whitelist: ['session']
-};
-
-const persistedReducer = persistReducer(config, rootReducer);
-
-const store = createStore(persistedReducer, compose(...enhancers));
+const store = createStore(rootReducer, compose(...enhancers));
 
 persistStore(store);
 

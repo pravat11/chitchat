@@ -14,6 +14,7 @@ const session = (state: SessionState = INITIAL_STATE, action: AppActions): Sessi
       return {
         ...state,
         isLoading: false,
+        error: {},
         data: {
           ...action.payload,
           username: action.meta.username
@@ -27,10 +28,12 @@ const session = (state: SessionState = INITIAL_STATE, action: AppActions): Sessi
       };
 
     case LOGIN_REJECTED:
+      const errorResponse = action.payload.response;
+
       return {
         ...state,
         isLoading: false,
-        error: action.payload.response
+        error: (errorResponse && errorResponse.data && errorResponse.data.error) || { message: 'Error' }
       };
 
     case LOGOUT:

@@ -8,6 +8,7 @@ import AppState from '../domain/states/AppState';
 import LoginPayload from '../domain/misc/LoginPayload';
 
 interface LoginProps {
+  error: any;
   handleSubmit: any;
   isLoading: boolean;
   login: (payload: LoginPayload) => void;
@@ -19,6 +20,7 @@ const Login = (props: LoginProps) => (
     <div className="login-form-wrapper">
       <Field className="login-form-element" name="username" component="input" type="text" placeholder="Username" />
       <Field className="login-form-element" name="password" component="input" type="password" placeholder="Password" />
+      {props.error && props.error.message && <div className="error-message">{props.error.message}</div>}
       <button className="login-button" type="submit" disabled={props.isLoading}>
         {props.isLoading ? <div className="spinner" /> : <span>Login</span>}
       </button>
@@ -27,6 +29,7 @@ const Login = (props: LoginProps) => (
 );
 
 const mapStateToProps = (state: AppState) => ({
+  error: state.session.error,
   isLoading: state.session.isLoading
 });
 
