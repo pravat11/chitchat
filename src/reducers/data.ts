@@ -27,8 +27,6 @@ export const INITIAL_STATE: DataState = {
 export default function profile(state: DataState = INITIAL_STATE, action: AppActions): DataState {
   switch (action.type) {
     case SEND_MESSAGE_PENDING:
-      //tslint:disable
-      console.log(action.meta);
       return {
         ...state,
         isSending: {
