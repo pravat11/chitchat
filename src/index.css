@@ -143,6 +143,17 @@ div::-webkit-scrollbar-thumb {
   width: 20%;
 }
 
+.block-overlay {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  opacity: 0.8;
+  position: fixed;
+  background-color: white;
+}
+
 .chat-input {
   width: 95%;
   outline: none;

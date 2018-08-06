@@ -8,3 +8,7 @@ export async function login(payload: LoginPayload): Promise<LoginResponse> {
 
   return data.data;
 }
+
+export async function validateSession() {
+  return await http.get(config.apis.validateSession);
+}

@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import * as classnames from 'classnames';
 
 import { purgeStore } from '../store';
-import { logout } from '../actions/auth';
 import { getUsername } from '../services/user';
 import AppState from '../domain/states/AppState';
+import { initializePusher } from '../services/pusher';
 import SentMessage from '../domain/response/SentMessage';
+import { logout, validateSession } from '../actions/auth';
 
 interface MessagesContainerProps {
   username: string;
@@ -15,6 +16,7 @@ interface MessagesContainerProps {
     [key: string]: boolean;
   };
   logout: () => void;
+  validateSession: () => void;
 }
 
 interface State {
@@ -30,7 +32,11 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.props.validateSession();
+
+    initializePusher();
+
     const headerElem = document.getElementById('appHeader');
     const formElem = document.getElementById('messageForm');
 
@@ -118,7 +124,8 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = {
-  logout
+  logout,
+  validateSession
 };
 
 export default connect(

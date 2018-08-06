@@ -12,9 +12,10 @@ export interface SessionData extends LoginResponse {
 }
 
 interface Session {
-  data: SessionData | null;
-  isLoading: boolean;
   error: any;
+  isLoading: boolean;
+  data: SessionData | null;
+  validatingSession: boolean;
 }
 
 export default Session;

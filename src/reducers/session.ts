@@ -1,11 +1,20 @@
 import AppActions from '../domain/AppActions';
 import SessionState from '../domain/states/Session';
-import { LOGIN_FULFILLED, LOGIN_PENDING, LOGIN_REJECTED, LOGOUT } from '../actions/auth';
+import {
+  LOGOUT,
+  LOGIN_PENDING,
+  LOGIN_REJECTED,
+  LOGIN_FULFILLED,
+  VALIDATE_SESSION_PENDING,
+  VALIDATE_SESSION_REJECTED,
+  VALIDATE_SESSION_FULFILLED
+} from '../actions/auth';
 
 const INITIAL_STATE: SessionState = {
   data: null,
   isLoading: false,
-  error: {}
+  error: {},
+  validatingSession: false
 };
 
 const session = (state: SessionState = INITIAL_STATE, action: AppActions): SessionState => {
@@ -34,6 +43,19 @@ const session = (state: SessionState = INITIAL_STATE, action: AppActions): Sessi
         ...state,
         isLoading: false,
         error: (errorResponse && errorResponse.data && errorResponse.data.error) || { message: 'Error' }
+      };
+
+    case VALIDATE_SESSION_PENDING:
+      return {
+        ...state,
+        validatingSession: true
+      };
+
+    case VALIDATE_SESSION_REJECTED:
+    case VALIDATE_SESSION_FULFILLED:
+      return {
+        ...state,
+        validatingSession: false
       };
 
     case LOGOUT:
