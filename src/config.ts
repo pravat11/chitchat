@@ -1,6 +1,6 @@
 const config = {
-  // baseURL: 'http://localhost:8848/api',
-  baseURL: 'https://intense-sands-36022.herokuapp.com/api',
+  baseURL: 'http://localhost:8848/api',
+  // baseURL: 'https://intense-sands-36022.herokuapp.com/api',
   apis: {
     login: '/login',
     sendMessage: '/send-message',

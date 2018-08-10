@@ -2,12 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import * as classnames from 'classnames';
 
-import { purgeStore } from '../store';
 import { getUsername } from '../services/user';
 import AppState from '../domain/states/AppState';
-import { initializePusher } from '../services/pusher';
 import SentMessage from '../domain/response/SentMessage';
-import { logout, validateSession } from '../actions/auth';
 
 interface MessagesContainerProps {
   username: string;
@@ -15,8 +12,6 @@ interface MessagesContainerProps {
   isSending: {
     [key: string]: boolean;
   };
-  logout: () => void;
-  validateSession: () => void;
 }
 
 interface State {
@@ -33,10 +28,6 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
   }
 
   async componentDidMount() {
-    await this.props.validateSession();
-
-    initializePusher();
-
     const headerElem = document.getElementById('appHeader');
     const formElem = document.getElementById('messageForm');
 
@@ -58,11 +49,6 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     return `${hours}:${parsedMinutes}`;
   };
 
-  handleLogout = async () => {
-    await purgeStore();
-    this.props.logout();
-  };
-
   getIndicator(timestamp: string): JSX.Element {
     const isSending = this.props.isSending[timestamp];
 
@@ -82,9 +68,6 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 
     return (
       <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: this.state.height }}>
-        <div className="cross-button" title="Logout" onClick={this.handleLogout}>
-          &times;
-        </div>
         {chatHistory.map((chatMessage, index, chatMessageArray) => {
           const sendingFailed = isSending[chatMessage.timestamp] === undefined;
           const previousMessage = index > 0 ? chatMessageArray[index - 1] : null;
@@ -123,12 +106,4 @@ const mapStateToProps = (state: AppState) => ({
   username: getUsername(state.session.data)
 });
 
-const mapDispatchToProps = {
-  logout,
-  validateSession
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(MessagesContainer);
+export default connect(mapStateToProps)(MessagesContainer);
