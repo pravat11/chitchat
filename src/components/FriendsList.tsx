@@ -1,77 +1,18 @@
 import * as React from 'react';
 
+import { connect } from 'react-redux';
+import { getUserId } from '../services/user';
+import Friend from '../domain/response/Friend';
+import AppState from '../domain/states/AppState';
+import { fetchFriends } from '../actions/friends';
 import DashboardStages from '../enum/DashboardStages';
 
 interface FriendsListProps {
+  userId: number;
+  friends: Friend[];
+  fetchFriends: (userId: number) => void;
   setDashboardStage: (stage: DashboardStages) => void;
 }
-
-const friends = [
-  {
-    friendshipId: 1,
-    friendName: 'aaaa'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  },
-  {
-    friendshipId: 2,
-    friendName: 'bbbb'
-  }
-];
 
 interface State {
   containerHeight: number;
@@ -87,6 +28,10 @@ class FriendsList extends React.Component<FriendsListProps, State> {
   }
 
   componentDidMount() {
+    const { userId } = this.props;
+
+    this.props.fetchFriends(userId);
+
     const headerElem = document.getElementById('appHeader');
 
     const windowHeight = window.innerHeight;
@@ -103,8 +48,8 @@ class FriendsList extends React.Component<FriendsListProps, State> {
       <div className="friend-list-container" style={{ maxHeight: this.state.containerHeight }}>
         <h2>Your friends</h2>
         <div className="friend-list">
-          {friends.map(friend => (
-            <div className="friend-list-item">{friend.friendName}</div>
+          {this.props.friends.map(friend => (
+            <div className="friend-list-item">{friend.name}</div>
           ))}
         </div>
       </div>
@@ -112,4 +57,16 @@ class FriendsList extends React.Component<FriendsListProps, State> {
   }
 }
 
-export default FriendsList;
+const mapStateToProps = (state: AppState) => ({
+  friends: state.data.friends,
+  userId: getUserId(state.session.data)
+});
+
+const mapDispatchToProps = {
+  fetchFriends
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FriendsList);

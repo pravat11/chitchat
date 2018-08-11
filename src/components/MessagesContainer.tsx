@@ -101,9 +101,9 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  isSending: state.data.isSending,
   chatHistory: state.data.chatHistory,
-  username: getUsername(state.session.data)
+  username: getUsername(state.session.data),
+  isSending: state.ui.chatMessages.isSending
 });
 
 export default connect(mapStateToProps)(MessagesContainer);
