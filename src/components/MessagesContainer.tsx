@@ -4,7 +4,10 @@ import * as classnames from 'classnames';
 
 import { getUsername } from '../services/user';
 import AppState from '../domain/states/AppState';
+import { getMessages } from '../actions/messages';
+import DashboardStages from '../enum/DashboardStages';
 import SentMessage from '../domain/response/SentMessage';
+import { setSelectedFriendshipId } from '../actions/friends';
 
 interface MessagesContainerProps {
   username: string;
@@ -12,6 +15,11 @@ interface MessagesContainerProps {
   isSending: {
     [key: string]: boolean;
   };
+  selectedFriendshipId: number | null;
+
+  getMessages: (friendshipId: number) => void;
+  setDashboardStage: (stage: DashboardStages) => void;
+  setSelectedFriendshipId: (value: number | null) => void;
 }
 
 interface State {
@@ -25,6 +33,14 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     this.state = {
       height: 0
     };
+  }
+
+  async componentWillMount() {
+    const { selectedFriendshipId } = this.props;
+
+    if (selectedFriendshipId) {
+      this.props.getMessages(selectedFriendshipId);
+    }
   }
 
   async componentDidMount() {
@@ -63,11 +79,21 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     return <div className="sent-indicator" title="Sent" />;
   }
 
+  handleBackButtonClicked = () => {
+    this.props.setSelectedFriendshipId(null);
+    this.props.setDashboardStage(DashboardStages.FRIENDS_LIST);
+  };
+
   render() {
     const { chatHistory, isSending, username } = this.props;
 
     return (
       <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: this.state.height }}>
+        <div
+          className="header-button back-button"
+          title="Back to friends list"
+          onClick={this.handleBackButtonClicked}
+        />
         {chatHistory.map((chatMessage, index, chatMessageArray) => {
           const sendingFailed = isSending[chatMessage.timestamp] === undefined;
           const previousMessage = index > 0 ? chatMessageArray[index - 1] : null;
@@ -103,7 +129,16 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 const mapStateToProps = (state: AppState) => ({
   chatHistory: state.data.chatHistory,
   username: getUsername(state.session.data),
-  isSending: state.ui.chatMessages.isSending
+  isSending: state.ui.chatMessages.isSending,
+  selectedFriendshipId: state.ui.selectedFriendshipId
 });
 
-export default connect(mapStateToProps)(MessagesContainer);
+const mapDispatchToProps = {
+  getMessages,
+  setSelectedFriendshipId
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MessagesContainer);

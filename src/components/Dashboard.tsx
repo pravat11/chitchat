@@ -35,14 +35,14 @@ class App extends React.Component<DashboardProps, {}> {
 
     return (
       <div>
-        <div className="cross-button" title="Logout" onClick={this.handleLogout}>
+        <div className="header-button cross-button" title="Logout" onClick={this.handleLogout}>
           &times;
         </div>
         {currentDashboardStage === DashboardStages.FRIENDS_LIST ? (
           <FriendsList setDashboardStage={this.props.setDashboardStage} />
         ) : currentDashboardStage === DashboardStages.MESSAGES_CONTAINER ? (
           <React.Fragment>
-            <MessagesContainer />
+            <MessagesContainer setDashboardStage={this.props.setDashboardStage} />
             <MessageForm />
           </React.Fragment>
         ) : null}

@@ -89,14 +89,28 @@ body {
   margin: 0 auto;
 }
 
-.cross-button {
-  font-size: 40px;
+.header-button {
   position: absolute;
-  top: 8px;
-  right: 15px;
   color: white;
   cursor: pointer;
   font-weight: bolder;
+}
+
+.cross-button {
+  right: 15px;
+  top: 8px;
+  font-size: 40px;
+}
+
+.back-button {
+  left: 15px;
+  top: 22px;
+  font-size: 16px;
+  border-top: 5px solid white;
+  border-right: 5px solid white;
+  transform: rotate(225deg);
+  width: 15px;
+  height: 15px;
 }
 
 div::-webkit-scrollbar {

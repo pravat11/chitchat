@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 import { getUserId } from '../services/user';
 import Friend from '../domain/response/Friend';
 import AppState from '../domain/states/AppState';
-import { fetchFriends } from '../actions/friends';
 import DashboardStages from '../enum/DashboardStages';
+import { fetchFriends, setSelectedFriendshipId } from '../actions/friends';
 
 interface FriendsListProps {
   userId: number;
   friends: Friend[];
   fetchFriends: (userId: number) => void;
+  setSelectedFriendshipId: (id: number) => void;
   setDashboardStage: (stage: DashboardStages) => void;
 }
 
@@ -43,7 +44,8 @@ class FriendsList extends React.Component<FriendsListProps, State> {
     this.setState({ containerHeight });
   }
 
-  handleListItemClicked = () => {
+  handleListItemClicked = (friendshipId: number) => {
+    this.props.setSelectedFriendshipId(friendshipId);
     this.props.setDashboardStage(DashboardStages.MESSAGES_CONTAINER);
   };
 
@@ -53,7 +55,11 @@ class FriendsList extends React.Component<FriendsListProps, State> {
         <h2>Your friends</h2>
         <div className="friend-list">
           {this.props.friends.map(friend => (
-            <div className="friend-list-item" onClick={this.handleListItemClicked}>
+            <div
+              key={friend.friendshipId}
+              className="friend-list-item"
+              onClick={() => this.handleListItemClicked(friend.friendshipId)}
+            >
               {friend.name}
             </div>
           ))}
@@ -69,7 +75,8 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = {
-  fetchFriends
+  fetchFriends,
+  setSelectedFriendshipId
 };
 
 export default connect(
