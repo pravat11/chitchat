@@ -18,28 +18,12 @@ interface DashboardProps {
   setDashboardStage: (stage: DashboardStages) => void;
 }
 
-interface State {
-  showFriendsList: boolean;
-}
-
-class App extends React.Component<DashboardProps, State> {
-  constructor(props: DashboardProps) {
-    super(props);
-
-    this.state = {
-      showFriendsList: true
-    };
-  }
-
+class App extends React.Component<DashboardProps, {}> {
   async componentDidMount() {
     await this.props.validateSession();
 
     initializePusher();
   }
-
-  toggleFriendsListVisibilityStatus = () => {
-    this.setState({ showFriendsList: !this.state.showFriendsList });
-  };
 
   handleLogout = async () => {
     await purgeStore();
@@ -47,19 +31,21 @@ class App extends React.Component<DashboardProps, State> {
   };
 
   render() {
+    const { currentDashboardStage } = this.props;
+
     return (
       <div>
         <div className="cross-button" title="Logout" onClick={this.handleLogout}>
           &times;
         </div>
-        {this.state.showFriendsList ? (
+        {currentDashboardStage === DashboardStages.FRIENDS_LIST ? (
           <FriendsList setDashboardStage={this.props.setDashboardStage} />
-        ) : (
+        ) : currentDashboardStage === DashboardStages.MESSAGES_CONTAINER ? (
           <React.Fragment>
             <MessagesContainer />
             <MessageForm />
           </React.Fragment>
-        )}
+        ) : null}
       </div>
     );
   }

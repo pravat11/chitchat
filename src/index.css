@@ -295,8 +295,9 @@ div::-webkit-scrollbar-thumb {
 }
 
 .friend-list-item {
-  margin: 10px 0;
   padding: 5px;
+  margin: 10px 0;
+  cursor: pointer;
   border-radius: 5px;
   background-color: #9af8f7;
 }

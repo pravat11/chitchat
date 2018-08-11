@@ -1,6 +1,7 @@
 import DashboardStages from '../../enum/DashboardStages';
 
 interface Ui {
+  selectedFriendshipId: number | null;
   currentDashboardStage: DashboardStages;
   friends: {
     isFetching: boolean;

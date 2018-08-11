@@ -12,9 +12,15 @@ import {
   GET_MESSAGES_REJECTED,
   GET_MESSAGES_FULFILLED
 } from '../actions/messages';
-import { FETCH_FRIENDS_PENDING, FETCH_FRIENDS_REJECTED, FETCH_FRIENDS_FULFILLED } from '../actions/friends';
+import {
+  FETCH_FRIENDS_PENDING,
+  FETCH_FRIENDS_REJECTED,
+  FETCH_FRIENDS_FULFILLED,
+  SET_SELECTED_FRIENDSHIP_ID
+} from '../actions/friends';
 
 const INITIAL_STATE: UiState = {
+  selectedFriendshipId: null,
   currentDashboardStage: DashboardStages.FRIENDS_LIST,
   friends: {
     isFetching: false,
@@ -33,6 +39,12 @@ const session = (state: UiState = INITIAL_STATE, action: AppActions): UiState =>
       return {
         ...state,
         currentDashboardStage: action.payload
+      };
+
+    case SET_SELECTED_FRIENDSHIP_ID:
+      return {
+        ...state,
+        selectedFriendshipId: action.payload
       };
 
     case GET_MESSAGES_PENDING:

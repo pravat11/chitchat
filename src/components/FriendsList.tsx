@@ -43,13 +43,19 @@ class FriendsList extends React.Component<FriendsListProps, State> {
     this.setState({ containerHeight });
   }
 
+  handleListItemClicked = () => {
+    this.props.setDashboardStage(DashboardStages.MESSAGES_CONTAINER);
+  };
+
   render() {
     return (
       <div className="friend-list-container" style={{ maxHeight: this.state.containerHeight }}>
         <h2>Your friends</h2>
         <div className="friend-list">
           {this.props.friends.map(friend => (
-            <div className="friend-list-item">{friend.name}</div>
+            <div className="friend-list-item" onClick={this.handleListItemClicked}>
+              {friend.name}
+            </div>
           ))}
         </div>
       </div>
