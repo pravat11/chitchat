@@ -4,8 +4,8 @@ const config = {
   apis: {
     login: '/login',
     sendMessage: '/send-message',
-    fetchFriends: '/{userId}/friends',
-    validateSession: '/validate-session'
+    validateSession: '/validate-session',
+    fetchFriends: '/user/{userId}/friends'
   },
   pusher: {
     key: '96872f3207c2fdf6922b',

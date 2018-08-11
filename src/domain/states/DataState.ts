@@ -1,13 +1,9 @@
+import Friend from '../response/Friend';
 import SentMessage from '../response/SentMessage';
 
 interface DataState {
+  friends: Friend[];
   chatHistory: SentMessage[];
-  isSending: {
-    [key: string]: boolean;
-  };
-  error: {
-    [key: string]: any;
-  };
 }
 
 export default DataState;

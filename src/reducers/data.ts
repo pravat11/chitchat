@@ -1,20 +1,13 @@
-import { omit } from 'lodash';
-
 import { LOGOUT } from '../actions/auth';
 import AppActions from '../domain/AppActions';
 import DataState from '../domain/states/DataState';
-import {
-  MESSAGE_RECEIVED,
-  SEND_MESSAGE_PENDING,
-  SEND_MESSAGE_REJECTED,
-  SEND_MESSAGE_FULFILLED
-} from '../actions/messages';
 import SentMessage from '../domain/response/SentMessage';
+import { FETCH_FRIENDS_FULFILLED } from '../actions/friends';
+import { MESSAGE_RECEIVED, SEND_MESSAGE_PENDING } from '../actions/messages';
 
 export const INITIAL_STATE: DataState = {
-  chatHistory: [],
-  isSending: {},
-  error: {}
+  friends: [],
+  chatHistory: []
 };
 
 /**
@@ -29,27 +22,9 @@ export default function profile(state: DataState = INITIAL_STATE, action: AppAct
     case SEND_MESSAGE_PENDING:
       return {
         ...state,
-        isSending: {
-          ...state.isSending,
-          [action.meta.timestamp]: true
-        },
         chatHistory: state.chatHistory.concat({
           ...action.meta
         })
-      };
-
-    case SEND_MESSAGE_REJECTED:
-      const errorResponse = action.payload.response;
-
-      return {
-        ...state,
-        isSending: omit(state.isSending, action.meta.timestamp),
-        error: {
-          ...state.error,
-          [action.meta.timestamp]: (errorResponse && errorResponse.data && errorResponse.data.error) || {
-            message: 'Error'
-          }
-        }
       };
 
     case MESSAGE_RECEIVED:
@@ -58,13 +33,10 @@ export default function profile(state: DataState = INITIAL_STATE, action: AppAct
         chatHistory: updateChatHistory(state.chatHistory, action.payload)
       };
 
-    case SEND_MESSAGE_FULFILLED:
+    case FETCH_FRIENDS_FULFILLED:
       return {
         ...state,
-        isSending: {
-          ...state.isSending,
-          [action.meta.timestamp]: false
-        }
+        friends: action.payload
       };
 
     case LOGOUT:
