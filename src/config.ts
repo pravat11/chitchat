@@ -5,7 +5,8 @@ const config = {
     login: '/login',
     sendMessage: '/send-message',
     validateSession: '/validate-session',
-    fetchFriends: '/user/{userId}/friends'
+    fetchFriends: '/user/{userId}/friends',
+    getChatMessages: 'friendship/{friendshipId}/chat-messages'
   },
   pusher: {
     key: '96872f3207c2fdf6922b',

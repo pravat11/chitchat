@@ -51,7 +51,7 @@ const enhance = compose<any, any>(
   withHandlers({
     onSubmit: (props: MessageFormProps) => async (formData: any) => {
       if (formData.message) {
-        const timestamp = new Date().toUTCString();
+        const timestamp = new Date().toISOString();
         const sendMessagePayload = {
           timestamp,
           username: props.username,
