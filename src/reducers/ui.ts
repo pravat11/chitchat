@@ -4,7 +4,14 @@ import UiState from '../domain/states/Ui';
 import AppActions from '../domain/AppActions';
 import { SET_DASHBOARD_STAGE } from '../actions/ui';
 import DashboardStages from '../enum/DashboardStages';
-import { SEND_MESSAGE_PENDING, SEND_MESSAGE_REJECTED, SEND_MESSAGE_FULFILLED } from '../actions/messages';
+import {
+  SEND_MESSAGE_PENDING,
+  SEND_MESSAGE_REJECTED,
+  SEND_MESSAGE_FULFILLED,
+  GET_MESSAGES_PENDING,
+  GET_MESSAGES_REJECTED,
+  GET_MESSAGES_FULFILLED
+} from '../actions/messages';
 import { FETCH_FRIENDS_PENDING, FETCH_FRIENDS_REJECTED, FETCH_FRIENDS_FULFILLED } from '../actions/friends';
 
 const INITIAL_STATE: UiState = {
@@ -14,6 +21,7 @@ const INITIAL_STATE: UiState = {
     error: {}
   },
   chatMessages: {
+    isFetching: false,
     isSending: {},
     error: {}
   }
@@ -25,6 +33,33 @@ const session = (state: UiState = INITIAL_STATE, action: AppActions): UiState =>
       return {
         ...state,
         currentDashboardStage: action.payload
+      };
+
+    case GET_MESSAGES_PENDING:
+      return {
+        ...state,
+        chatMessages: {
+          ...state.chatMessages,
+          isFetching: true
+        }
+      };
+
+    case GET_MESSAGES_REJECTED:
+      return {
+        ...state,
+        chatMessages: {
+          ...state.chatMessages,
+          isFetching: false
+        }
+      };
+
+    case GET_MESSAGES_FULFILLED:
+      return {
+        ...state,
+        chatMessages: {
+          ...state.chatMessages,
+          isFetching: false
+        }
       };
 
     case FETCH_FRIENDS_PENDING:

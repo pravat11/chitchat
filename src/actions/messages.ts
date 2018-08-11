@@ -35,7 +35,7 @@ export type MESSAGE_RECEIVED = typeof MESSAGE_RECEIVED;
 // Types for the actions
 export type GetMessagesActionPending = Action<GET_MESSAGES_PENDING>;
 export type GetMessagesActionRejected = ActionWithPayload<GET_MESSAGES_REJECTED, any>;
-export type GetMessagesActionFulfilled = ActionWithPayload<GET_MESSAGES_FULFILLED, SentMessage>;
+export type GetMessagesActionFulfilled = ActionWithPayload<GET_MESSAGES_FULFILLED, SentMessage[]>;
 
 export type SendMessageActionPending = Action<SEND_MESSAGE_PENDING, SentMessage>;
 export type SendMessageActionRejected = ActionWithPayload<SEND_MESSAGE_REJECTED, any, SentMessage>;

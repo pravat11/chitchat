@@ -3,7 +3,7 @@ import AppActions from '../domain/AppActions';
 import DataState from '../domain/states/DataState';
 import SentMessage from '../domain/response/SentMessage';
 import { FETCH_FRIENDS_FULFILLED } from '../actions/friends';
-import { MESSAGE_RECEIVED, SEND_MESSAGE_PENDING } from '../actions/messages';
+import { MESSAGE_RECEIVED, SEND_MESSAGE_PENDING, GET_MESSAGES_FULFILLED } from '../actions/messages';
 
 export const INITIAL_STATE: DataState = {
   friends: [],
@@ -19,6 +19,12 @@ export const INITIAL_STATE: DataState = {
  */
 export default function profile(state: DataState = INITIAL_STATE, action: AppActions): DataState {
   switch (action.type) {
+    case GET_MESSAGES_FULFILLED:
+      return {
+        ...state,
+        chatHistory: action.payload
+      };
+
     case SEND_MESSAGE_PENDING:
       return {
         ...state,
