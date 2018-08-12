@@ -52,7 +52,7 @@ class FriendsList extends React.Component<FriendsListProps, State> {
   render() {
     return (
       <div className="friend-list-container" style={{ maxHeight: this.state.containerHeight }}>
-        <h2>Your friends</h2>
+        <h2 className="friends-title">Your friends</h2>
         <div className="friend-list">
           {this.props.friends.map(friend => (
             <div

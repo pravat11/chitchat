@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as classnames from 'classnames';
 
-import { getUsername } from '../services/user';
+import MessageItem from './MessageItem';
 import AppState from '../domain/states/AppState';
 import { getMessages } from '../actions/messages';
 import DashboardStages from '../enum/DashboardStages';
@@ -10,13 +9,8 @@ import SentMessage from '../domain/response/SentMessage';
 import { setSelectedFriendshipId } from '../actions/friends';
 
 interface MessagesContainerProps {
-  username: string;
   chatHistory: SentMessage[];
-  isSending: {
-    [key: string]: boolean;
-  };
   selectedFriendshipId: number | null;
-
   getMessages: (friendshipId: number) => void;
   setDashboardStage: (stage: DashboardStages) => void;
   setSelectedFriendshipId: (value: number | null) => void;
@@ -43,6 +37,21 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     }
   }
 
+  componentWillReceiveProps(nextProps: MessagesContainerProps) {
+    if (nextProps.chatHistory.length > this.props.chatHistory.length) {
+      setTimeout(this.scrollToBottom, 10);
+    }
+  }
+
+  scrollToBottom = () => {
+    const numberOfMessages = this.props.chatHistory.length;
+    const chatMessagesContainerElem = document.getElementById(`chatMessage${numberOfMessages - 1}`);
+
+    if (chatMessagesContainerElem) {
+      chatMessagesContainerElem.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+    }
+  };
+
   async componentDidMount() {
     const headerElem = document.getElementById('appHeader');
     const formElem = document.getElementById('messageForm');
@@ -56,36 +65,13 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     this.setState({ height });
   }
 
-  getTimeFromTimestamp = (timestamp: string): string => {
-    const date = new Date(timestamp);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const parsedMinutes = minutes < 10 ? '0' + minutes : minutes;
-
-    return `${hours}:${parsedMinutes}`;
-  };
-
-  getIndicator(timestamp: string): JSX.Element {
-    const isSending = this.props.isSending[timestamp];
-
-    if (isSending === undefined) {
-      return <div className="error-indicator" title="Sending failed" />;
-    }
-
-    if (isSending) {
-      return <div className="spinner" title="Sending" />;
-    }
-
-    return <div className="sent-indicator" title="Sent" />;
-  }
-
   handleBackButtonClicked = () => {
     this.props.setSelectedFriendshipId(null);
     this.props.setDashboardStage(DashboardStages.FRIENDS_LIST);
   };
 
   render() {
-    const { chatHistory, isSending, username } = this.props;
+    const { chatHistory } = this.props;
 
     return (
       <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: this.state.height }}>
@@ -94,33 +80,16 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
           title="Back to friends list"
           onClick={this.handleBackButtonClicked}
         />
-        {chatHistory.map((chatMessage, index, chatMessageArray) => {
-          const sendingFailed = isSending[chatMessage.timestamp] === undefined;
-          const previousMessage = index > 0 ? chatMessageArray[index - 1] : null;
-          const shouldShowUsername = previousMessage ? previousMessage.username !== chatMessage.username : true;
-          const isSelf = chatMessage.username === username;
-
-          const messageBoxClass = classnames({
-            'message-box': true,
-            mt: shouldShowUsername,
-            right: isSelf,
-            left: !isSelf
-          });
-
-          const indicatorClass = classnames({
-            indicator: true,
-            'error-indicator-wrapper': sendingFailed
-          });
-
-          return (
-            <div className={messageBoxClass} key={index}>
-              {shouldShowUsername && <div className="username-wrapper">{isSelf ? 'You' : chatMessage.username}</div>}
-              {chatMessage.message}
-              <div className="message-time">{this.getTimeFromTimestamp(chatMessage.timestamp)}</div>
-              {isSelf && <div className={indicatorClass}>{this.getIndicator(chatMessage.timestamp)}</div>}
-            </div>
-          );
-        })}
+        <div className="message-list">
+          {chatHistory.map((chatMessage, index, chatMessageArray) => (
+            <MessageItem
+              key={`chat-message-${index}`}
+              index={index}
+              chatMessage={chatMessage}
+              previousMessage={chatMessageArray[index - 1]}
+            />
+          ))}
+        </div>
       </div>
     );
   }
@@ -128,8 +97,6 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 
 const mapStateToProps = (state: AppState) => ({
   chatHistory: state.data.chatHistory,
-  username: getUsername(state.session.data),
-  isSending: state.ui.chatMessages.isSending,
   selectedFriendshipId: state.ui.selectedFriendshipId
 });
 
