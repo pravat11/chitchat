@@ -88,7 +88,7 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
         ) : (
           chatHistory.map((chatMessage, index, chatMessageArray) => (
             <MessageItem
-              key={`chat-message-${index}`}
+              key={`${chatMessage.status}-${index}`}
               index={index}
               chatMessage={chatMessage}
               previousMessage={chatMessageArray[index - 1]}
