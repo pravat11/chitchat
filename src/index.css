@@ -178,11 +178,6 @@ div::-webkit-scrollbar-thumb {
   border: 1px solid white;
 }
 
-.message-list {
-  height: 100%;
-  position: relative;
-}
-
 .message-box {
   opacity: 1;
   width: 75%;
@@ -315,6 +310,18 @@ div::-webkit-scrollbar-thumb {
   border-top: 3px solid #3498db;
   animation: spin 1s linear infinite;
   -webkit-animation: spin 1s linear infinite;
+}
+
+.message-load-spinner {
+  border-width: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  margin: auto;
 }
 
 .friend-list-container {

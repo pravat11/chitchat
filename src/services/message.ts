@@ -10,8 +10,17 @@ export async function getMessages(friendshipId: number): Promise<SentMessage[]> 
   return data.data;
 }
 
-export async function sendMessage(payload: SentMessage): Promise<SentMessage> {
-  await http.post(config.apis.sendMessage, payload);
+export async function sendMessage(
+  senderUserId: number,
+  friendshipId: number,
+  payload: SentMessage
+): Promise<SentMessage> {
+  await http.post(config.apis.sendMessage, {
+    senderUserId,
+    friendshipId,
+    message: payload.message,
+    timestamp: payload.timestamp
+  });
 
   return payload;
 }

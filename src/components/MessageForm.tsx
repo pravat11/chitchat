@@ -3,17 +3,19 @@ import { connect } from 'react-redux';
 import { compose, withHandlers } from 'recompose';
 import { Field, reduxForm, reset } from 'redux-form';
 
-import { getUsername } from '../services/user';
 import AppState from '../domain/states/AppState';
 import { sendMessage } from '../actions/messages';
+import { getUsername, getUserId } from '../services/user';
 import SentMessagePayload from '../domain/response/SentMessage';
 
 interface MessageFormProps {
   username: string;
+  userId: number;
   handleSubmit: any;
+  friendshipId: number | null;
   reset: (formName: string) => void;
   onSubmit: (formData: any) => void;
-  sendMessage: (payload: SentMessagePayload) => void;
+  sendMessage: (senderUserId: number, friendshipId: number, payload: SentMessagePayload) => void;
 }
 
 const MessageForm = (props: MessageFormProps) => (
@@ -30,7 +32,9 @@ const MessageForm = (props: MessageFormProps) => (
 );
 
 const mapStateToProps = (state: AppState) => ({
-  username: getUsername(state.session.data)
+  userId: getUserId(state.session.data),
+  username: getUsername(state.session.data),
+  friendshipId: state.ui.selectedFriendshipId
 });
 
 const mapDispatchToProps = {
@@ -50,7 +54,9 @@ const enhance = compose<any, any>(
 
   withHandlers({
     onSubmit: (props: MessageFormProps) => async (formData: any) => {
-      if (formData.message) {
+      const { userId, friendshipId } = props;
+
+      if (formData.message && friendshipId) {
         const timestamp = new Date().toISOString();
         const sendMessagePayload = {
           timestamp,
@@ -59,7 +65,7 @@ const enhance = compose<any, any>(
         };
 
         try {
-          props.sendMessage(sendMessagePayload);
+          props.sendMessage(userId, friendshipId, sendMessagePayload);
         } catch (err) {
           return;
         }

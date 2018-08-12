@@ -50,4 +50,8 @@ export type MessageActions = GetMessagesAction | SendMessageAction | MessageRece
 // Action creators
 export const messageReceived: any = createAction(MESSAGE_RECEIVED);
 export const getMessages = createAction(GET_MESSAGES, messageService.getMessages);
-export const sendMessage = createAction(SEND_MESSAGE, messageService.sendMessage, payload => payload);
+export const sendMessage = createAction(
+  SEND_MESSAGE,
+  messageService.sendMessage,
+  (userId, friendshipId, payload) => payload
+);

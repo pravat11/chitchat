@@ -10,6 +10,7 @@ import { setSelectedFriendshipId } from '../actions/friends';
 
 interface MessagesContainerProps {
   chatHistory: SentMessage[];
+  isFetchingChatMessages: boolean;
   selectedFriendshipId: number | null;
   getMessages: (friendshipId: number) => void;
   setDashboardStage: (stage: DashboardStages) => void;
@@ -71,7 +72,7 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
   };
 
   render() {
-    const { chatHistory } = this.props;
+    const { chatHistory, isFetchingChatMessages } = this.props;
 
     return (
       <div className="chat-messages-container" id="chatMessagesContainer" style={{ height: this.state.height }}>
@@ -80,16 +81,20 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
           title="Back to friends list"
           onClick={this.handleBackButtonClicked}
         />
-        <div className="message-list">
-          {chatHistory.map((chatMessage, index, chatMessageArray) => (
+        {isFetchingChatMessages ? (
+          <div className="block-overlay">
+            <div className="spinner message-load-spinner" />
+          </div>
+        ) : (
+          chatHistory.map((chatMessage, index, chatMessageArray) => (
             <MessageItem
               key={`chat-message-${index}`}
               index={index}
               chatMessage={chatMessage}
               previousMessage={chatMessageArray[index - 1]}
             />
-          ))}
-        </div>
+          ))
+        )}
       </div>
     );
   }
@@ -97,7 +102,8 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
 
 const mapStateToProps = (state: AppState) => ({
   chatHistory: state.data.chatHistory,
-  selectedFriendshipId: state.ui.selectedFriendshipId
+  selectedFriendshipId: state.ui.selectedFriendshipId,
+  isFetchingChatMessages: state.ui.chatMessages.isFetching
 });
 
 const mapDispatchToProps = {
