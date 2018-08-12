@@ -20,7 +20,8 @@ interface DashboardProps {
 
 class App extends React.Component<DashboardProps, {}> {
   async componentDidMount() {
-    await this.props.validateSession();
+    // Do not validate for now.
+    // await this.props.validateSession();
 
     initializePusher();
   }

@@ -10,6 +10,7 @@ import { fetchFriends, setSelectedFriendshipId } from '../actions/friends';
 interface FriendsListProps {
   userId: number;
   friends: Friend[];
+  isFetchingFriendList: boolean;
   fetchFriends: (userId: number) => void;
   setSelectedFriendshipId: (id: number) => void;
   setDashboardStage: (stage: DashboardStages) => void;
@@ -50,20 +51,34 @@ class FriendsList extends React.Component<FriendsListProps, State> {
   };
 
   render() {
+    const { friends, isFetchingFriendList } = this.props;
+
     return (
       <div className="friend-list-container" style={{ maxHeight: this.state.containerHeight }}>
-        <h2 className="friends-title">Your friends</h2>
-        <div className="friend-list">
-          {this.props.friends.map(friend => (
-            <div
-              key={friend.friendshipId}
-              className="friend-list-item"
-              onClick={() => this.handleListItemClicked(friend.friendshipId)}
-            >
-              {friend.name}
+        <div className="friend-title-wrapper">
+          {isFetchingFriendList ? (
+            <div className="message-load-spinner with-text">
+              <span>Retrieving friend list</span>
+              <div className="spinner center" />
             </div>
-          ))}
+          ) : (
+            <span className="friend-title">Your friends</span>
+          )}
         </div>
+        {!isFetchingFriendList && (
+          <div className="friend-list">
+            {!friends.length && <div className="friend-list-item empty-list">Your friend list is currently empty.</div>}
+            {friends.map(friend => (
+              <div
+                key={friend.friendshipId}
+                className="friend-list-item"
+                onClick={() => this.handleListItemClicked(friend.friendshipId)}
+              >
+                {friend.name}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
@@ -71,7 +86,8 @@ class FriendsList extends React.Component<FriendsListProps, State> {
 
 const mapStateToProps = (state: AppState) => ({
   friends: state.data.friends,
-  userId: getUserId(state.session.data)
+  userId: getUserId(state.session.data),
+  isFetchingFriendList: state.ui.friends.isFetching
 });
 
 const mapDispatchToProps = {

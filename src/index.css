@@ -324,14 +324,29 @@ div::-webkit-scrollbar-thumb {
   margin: auto;
 }
 
+.spinner.center {
+  margin: 5px auto;
+}
+
+.message-load-spinner.with-text {
+  width: 150px;
+  height: 0px;
+}
+
 .friend-list-container {
   padding: 0 10px;
   overflow: auto;
   text-align: left;
 }
 
-.friends-title {
+.friend-title-wrapper {
   margin-top: 10px;
+  text-align: center;
+}
+
+.friend-title {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .friend-list {
@@ -344,6 +359,12 @@ div::-webkit-scrollbar-thumb {
   cursor: pointer;
   border-radius: 5px;
   background-color: #9af8f7;
+}
+
+.friend-list-item.empty-list {
+  background-color: inherit;
+  text-align: center;
+  cursor: default;
 }
 
 .friend-list-item:nth-child(even) {
