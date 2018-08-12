@@ -1,9 +1,16 @@
 import { LOGOUT } from '../actions/auth';
 import AppActions from '../domain/AppActions';
+import MessageStatus from '../enum/MessageStatus';
 import DataState from '../domain/states/DataState';
 import SentMessage from '../domain/response/SentMessage';
 import { FETCH_FRIENDS_FULFILLED } from '../actions/friends';
-import { MESSAGE_RECEIVED, SEND_MESSAGE_PENDING, GET_MESSAGES_FULFILLED } from '../actions/messages';
+import {
+  MESSAGE_RECEIVED,
+  SEND_MESSAGE_PENDING,
+  SEND_MESSAGE_REJECTED,
+  GET_MESSAGES_FULFILLED,
+  SEND_MESSAGE_FULFILLED
+} from '../actions/messages';
 
 export const INITIAL_STATE: DataState = {
   friends: [],
@@ -29,7 +36,32 @@ export default function profile(state: DataState = INITIAL_STATE, action: AppAct
       return {
         ...state,
         chatHistory: state.chatHistory.concat({
-          ...action.meta
+          ...action.meta,
+          status: MessageStatus.SENDING
+        })
+      };
+
+    case SEND_MESSAGE_REJECTED:
+      return {
+        ...state,
+        chatHistory: state.chatHistory.map(chatMessage => {
+          if (chatMessage.timestamp === action.meta.timestamp) {
+            chatMessage.status = MessageStatus.ERROR;
+          }
+
+          return chatMessage;
+        })
+      };
+
+    case SEND_MESSAGE_FULFILLED:
+      return {
+        ...state,
+        chatHistory: state.chatHistory.map(chatMessage => {
+          if (chatMessage.timestamp === action.meta.timestamp) {
+            chatMessage.status = MessageStatus.SENT;
+          }
+
+          return chatMessage;
         })
       };
 

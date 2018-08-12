@@ -4,6 +4,7 @@ import * as classnames from 'classnames';
 
 import { getUsername } from '../services/user';
 import AppState from '../domain/states/AppState';
+import MessageStatus from '../enum/MessageStatus';
 import SentMessage from '../domain/response/SentMessage';
 
 interface MessageItemProps {
@@ -19,6 +20,12 @@ interface MessageItemProps {
 interface State {
   isAnimating: boolean;
 }
+
+const statusToIndicatorMap = {
+  [MessageStatus.ERROR]: <div className="error-indicator" title="Sending failed" />,
+  [MessageStatus.SENDING]: <div className="spinner" title="Sending" />,
+  [MessageStatus.SENT]: <div className="sent-indicator" title="Sent" />
+};
 
 class MessageItem extends React.Component<MessageItemProps, State> {
   constructor(props: MessageItemProps) {
@@ -46,23 +53,9 @@ class MessageItem extends React.Component<MessageItemProps, State> {
     return `${hours}:${parsedMinutes}`;
   };
 
-  getIndicator(timestamp: string): JSX.Element {
-    const isSending = this.props.isSending[timestamp];
-
-    if (isSending === undefined) {
-      return <div className="error-indicator" title="Sending failed" />;
-    }
-
-    if (isSending) {
-      return <div className="spinner" title="Sending" />;
-    }
-
-    return <div className="sent-indicator" title="Sent" />;
-  }
-
   render() {
-    const { index, isSending, chatMessage, username, previousMessage } = this.props;
-    const sendingFailed = isSending[chatMessage.timestamp] === undefined;
+    const { index, chatMessage, username, previousMessage } = this.props;
+    const sendingFailed = chatMessage.status === MessageStatus.ERROR;
     const prevMessage = index > 0 ? previousMessage : null;
     const shouldShowUsername = prevMessage ? prevMessage.username !== chatMessage.username : true;
     const isSelf = chatMessage.username === username;
@@ -85,7 +78,9 @@ class MessageItem extends React.Component<MessageItemProps, State> {
         {shouldShowUsername && <div className="username-wrapper">{isSelf ? 'You' : chatMessage.username}</div>}
         {chatMessage.message}
         <div className="message-time">{this.getTimeFromTimestamp(chatMessage.timestamp)}</div>
-        {isSelf && <div className={indicatorClass}>{this.getIndicator(chatMessage.timestamp)}</div>}
+        {isSelf && (
+          <div className={indicatorClass}>{statusToIndicatorMap[chatMessage.status || MessageStatus.ERROR]}</div>
+        )}
       </div>
     );
   }
