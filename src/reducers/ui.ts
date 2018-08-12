@@ -1,11 +1,8 @@
-import { omit } from 'lodash';
-
 import UiState from '../domain/states/Ui';
 import AppActions from '../domain/AppActions';
 import { SET_DASHBOARD_STAGE } from '../actions/ui';
 import DashboardStages from '../enum/DashboardStages';
 import {
-  SEND_MESSAGE_PENDING,
   SEND_MESSAGE_REJECTED,
   SEND_MESSAGE_FULFILLED,
   GET_MESSAGES_PENDING,
@@ -28,7 +25,6 @@ const INITIAL_STATE: UiState = {
   },
   chatMessages: {
     isFetching: false,
-    isSending: {},
     error: {}
   }
 };
@@ -103,24 +99,11 @@ const session = (state: UiState = INITIAL_STATE, action: AppActions): UiState =>
         }
       };
 
-    case SEND_MESSAGE_PENDING:
-      return {
-        ...state,
-        chatMessages: {
-          ...state.chatMessages,
-          isSending: {
-            ...state.chatMessages.isSending,
-            [action.meta.timestamp]: true
-          }
-        }
-      };
-
     case SEND_MESSAGE_REJECTED:
       return {
         ...state,
         chatMessages: {
           ...state.chatMessages,
-          isSending: omit(state.chatMessages.isSending, action.meta.timestamp),
           error: {
             ...state.chatMessages.error,
             [action.meta.timestamp]: getError(action.payload.response)
@@ -133,10 +116,6 @@ const session = (state: UiState = INITIAL_STATE, action: AppActions): UiState =>
         ...state,
         chatMessages: {
           ...state.chatMessages,
-          isSending: {
-            ...state.chatMessages.isSending,
-            [action.meta.timestamp]: false
-          },
           error: {}
         }
       };

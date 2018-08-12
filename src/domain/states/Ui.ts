@@ -9,9 +9,6 @@ interface Ui {
   };
   chatMessages: {
     isFetching: boolean;
-    isSending: {
-      [key: string]: boolean;
-    };
     error: {
       [key: string]: any;
     };

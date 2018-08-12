@@ -12,9 +12,6 @@ interface MessageItemProps {
   username: string;
   chatMessage: SentMessage;
   previousMessage: SentMessage;
-  isSending: {
-    [key: string]: boolean;
-  };
 }
 
 interface State {
@@ -87,8 +84,7 @@ class MessageItem extends React.Component<MessageItemProps, State> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  username: getUsername(state.session.data),
-  isSending: state.ui.chatMessages.isSending
+  username: getUsername(state.session.data)
 });
 
 export default connect(mapStateToProps)(MessageItem);
