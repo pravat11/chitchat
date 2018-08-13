@@ -2,7 +2,7 @@ import store from '../store';
 import * as pusher from '../utils/pusher';
 import { messageReceived } from '../actions/messages';
 
-const CHANNEL_NAME = 'chitchat-channel';
+// const CHANNEL_NAME = 'chitchat-channel';
 const MESSAGE_SENT_EVENT = 'message-sent';
 
 /**
@@ -10,19 +10,23 @@ const MESSAGE_SENT_EVENT = 'message-sent';
  */
 export function initializePusher() {
   pusher.init();
+}
+
+export function initializeChannel(channelName: string) {
+  resetChannelSubscriptions();
 
   if (pusher.getPusherClient()) {
-    pusher.subscribe(CHANNEL_NAME);
+    pusher.subscribe(channelName);
 
-    initializeEventBinders();
+    initializeEventBinders(channelName);
   }
 }
 
 /**
  * Bind events to actions.
  */
-function initializeEventBinders() {
-  const channel = pusher.getPusherClient().channel(CHANNEL_NAME);
+function initializeEventBinders(channelName: string) {
+  const channel = pusher.getPusherClient().channel(channelName);
 
   channel.bind(MESSAGE_SENT_EVENT, (data: any) => {
     store.dispatch(messageReceived(data));
@@ -32,14 +36,13 @@ function initializeEventBinders() {
 /**
  * Unbind from all events and subscribe the channel.
  */
-export function resetChannelSubscription() {
-  if (pusher.getPusherClient()) {
-    const channel = pusher.getPusherClient().channel(CHANNEL_NAME);
+export function resetChannelSubscriptions() {
+  const client = pusher.getPusherClient();
 
-    if (channel) {
+  if (client) {
+    client.allChannels().forEach(channel => {
       channel.unbind_all();
-    }
-
-    pusher.unsubscribe(CHANNEL_NAME);
+      pusher.unsubscribe(channel.name);
+    });
   }
 }

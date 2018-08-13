@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import MessageItem from './MessageItem';
 import AppState from '../domain/states/AppState';
 import { getMessages } from '../actions/messages';
+import { initializeChannel } from '../services/pusher';
 import DashboardStages from '../enum/DashboardStages';
 import SentMessage from '../domain/response/SentMessage';
 import { setSelectedFriendshipId } from '../actions/friends';
@@ -34,6 +35,7 @@ class MessagesContainer extends React.Component<MessagesContainerProps, State> {
     const { selectedFriendshipId } = this.props;
 
     if (selectedFriendshipId) {
+      initializeChannel(`chitchat-channel-${selectedFriendshipId}`);
       this.props.getMessages(selectedFriendshipId);
     }
   }
